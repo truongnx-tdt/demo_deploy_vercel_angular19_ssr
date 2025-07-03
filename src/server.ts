@@ -5,7 +5,8 @@ import {
   writeResponseToNodeResponse,
 } from '@angular/ssr/node';
 import express from 'express';
-import { dirname, resolve } from 'node:path';
+import { readFileSync } from 'node:fs';
+import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const serverDistFolder = dirname(fileURLToPath(import.meta.url));
@@ -25,6 +26,20 @@ const angularApp = new AngularNodeAppEngine();
  * });
  * ```
  */
+app.get('/api/get-data', async (req, res) => {
+  try {
+    // const filePath = join(process.cwd(), 'dist/browser/assets/data.json');
+    // const jsonData = readFileSync(filePath, 'utf8');
+    // res.json(JSON.parse(jsonData));
+    const filePath = join(process.cwd(), 'assets', 'data.json');
+    console.log(`Loading data from: ${filePath}`);
+    const jsonData = readFileSync(filePath, 'utf-8');
+    res.json(JSON.parse(jsonData));
+  } catch (error) {
+    res.status(500).json({ error: 'Error loading data.json' });
+  }
+});
+
 
 /**
  * Serve static files from /browser
