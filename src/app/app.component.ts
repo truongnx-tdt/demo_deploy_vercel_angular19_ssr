@@ -49,6 +49,21 @@ export class AppComponent implements OnInit, OnDestroy {
 
   }
 
+   onSearch() {
+    if (!this.searchTerm.trim()) {
+      this.filteredData = [...this.data];
+      return;
+    }
+    
+    const searchLower = this.searchTerm.toLowerCase();
+    this.filteredData = this.data.filter(item => 
+      item.columns.some(column => 
+        column.toLowerCase().includes(searchLower)
+      )
+    );
+    
+  }
+
   clearSearch() {
     this.searchTerm = '';
     this.filteredData = [...this.data];
